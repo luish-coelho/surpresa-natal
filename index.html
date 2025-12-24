@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Pré-Show 31/01</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;700&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-darker: #000000;
+            --text-light: #ffffff;
+            --accent-blue: #0066ff;
+            --accent-blue-glow: #0066ffaa;
+            --accent-red: #ff0000;
+            --accent-red-glow: #ff0000aa;
+            --gray: #666666;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0, 102, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            line-height: 1.1;
+            text-shadow: 0 0 20px var(--accent-blue-glow);
+        }
+
+        .subtitle {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .question-number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 1.2rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option:hover {
+            border-color: var(--accent-blue);
+            background: rgba(0, 102, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option.selected {
+            background: rgba(0, 102, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
+        }
+
+        .option.correct {
+            background: rgba(0, 255, 100, 0.1);
+            border-color: #00ff64;
+        }
+
+        .option.incorrect {
+            background: rgba(0, 102, 255, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .btn {
+            font-family: 'Oswald', sans-serif;
+            background: var(--accent-blue);
+            color: var(--text-light);
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 2rem auto 0;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            background: #0052cc;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 102, 255, 0.5);
+        }
+
+        .btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--accent-blue-glow);
+        }
+
+        .intro-content {
+            text-align: center;
+        }
+
+        .intro-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: #cccccc;
+        }
+
+        .final-content {
+            text-align: center;
+        }
+
+        .reveal-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .result-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .result-text.delay-1 { animation-delay: 1.5s; }
+        .result-text.delay-2 { animation-delay: 4.5s; }
+        .result-text.delay-3 { animation-delay: 7.5s; }
+        .result-text.delay-4 { animation-delay: 14s; }
+
+        .big-reveal {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            color: var(--accent-blue);
+            margin: 2rem 0;
+            line-height: 1.2;
+            text-shadow: 0 0 30px var(--accent-blue-glow);
+            opacity: 0;
+            animation: bigReveal 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bigReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            50% {
+                transform: scale(1.05) translateY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .show-details {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            color: #cccccc;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 2s;
+        }
+
+        .final-btn {
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 3.5s;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+            animation-delay: 6.5s;
+        }
+
+        .loading-dots span {
+            animation: blink 1.4s infinite;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 60%, 100% { opacity: 0; }
+            30% { opacity: 1; }
+        }
+
+        /* FAILURE SCREEN STYLES */
+        .failure-content {
+            text-align: center;
+        }
+
+        .failure-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: shakeIn 0.8s ease forwards;
+        }
+
+        @keyframes shakeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotate(-10deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .failure-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 4rem);
+            color: var(--accent-red);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.5s;
+            line-height: 1.1;
+        }
+
+        .failure-message {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .failure-score {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: var(--gray);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1.5s;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 0.3s infinite;
+            color: #ff0000;
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 0.3s infinite;
+            color: #0066ff;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            33% { transform: translate(-2px, 2px); }
+            66% { transform: translate(2px, -2px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            33% { transform: translate(2px, -2px); }
+            66% { transform: translate(-2px, 2px); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .option {
+                padding: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .easter-egg {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        /* Fireworks */
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: explode 1.5s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        .firework-spark {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- TELA INICIAL -->
+        <div id="intro" class="screen active">
+            <div class="intro-content">
+                <h1>Checklist<br>Pré-Show<br>31/01</h1>
+                <p class="subtitle">Teste de Sobrevivência do Fim de Semana</p>
+                <p class="intro-description">
+                    Antes do show do Avenged Sevenfold + A Day To Remember,<br>
+                    você precisa provar que está pronto.<br><br>
+                    5 perguntas. Zero desculpas.
+                </p>
+                <button class="btn" onclick="startQuiz()">COMEÇAR</button>
+            </div>
+        </div>
+
+        <!-- TELA DO QUIZ -->
+        <div id="quiz" class="screen">
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="options"></div>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>PRÓXIMA</button>
+        </div>
+
+        <!-- TELA DE FALHA -->
+        <div id="failure" class="screen">
+            <div class="failure-content">
+                <div class="failure-icon">❌</div>
+                <h1 class="failure-title glitch" data-text="REPROVADO">REPROVADO</h1>
+                <div class="failure-message">
+                    Infelizmente, você não demonstrou estar preparado<br>
+                    para a experiência completa do show.<br><br>
+                    <strong style="color: var(--accent-red);">
+                        O PRESENTE SURPRESA<br>
+                        NUNCA SERÁ REVELADO.
+                    </strong>
+                </div>
+                <div class="failure-score">
+                    Você acertou apenas <strong id="correctCount">0</strong> de 5 questões.<br>
+                    Era necessário acertar pelo menos 3.
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA FINAL -->
+        <div id="final" class="screen">
+            <div class="final-content">
+                <div class="result-text">Resultado:</div>
+                <div class="result-text delay-1">
+                    Você está oficialmente pronto para o show do<br>
+                    <strong>Avenged Sevenfold + A Day To Remember</strong>.
+                </div>
+                <div class="result-text delay-2">
+                    <strong style="color: var(--accent-blue); font-size: 1.5em;">MAS NÃO É SÓ ISSO.</strong>
+                </div>
+                <div class="result-text delay-3">
+                    Esse teste também confirmou que você está pronto para outra situação<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                </div>
+                <div class="result-text delay-4">
+                    Tu achou mesmo que o teu irmão ia te deixar em casa tendo a chance de<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA DE REVELAÇÃO -->
+        <div id="reveal" class="screen">
+            <div class="fireworks" id="fireworksContainer"></div>
+            <div class="reveal-content">
+                <div class="big-reveal">
+                    🎸🔥<br>
+                    VER A DAY TO REMEMBER<br>
+                    AO VIVO EM PORTO ALEGRE
+                </div>
+                <div class="show-details">
+                    <strong>03 DE FEVEREIRO DE 2025</strong><br>
+                    KTO Arena • Porto Alegre/RS
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="easter-egg">FELIZ NATAL 🎄</div>
+
+    <!-- ÁUDIO (sons sintetizados via Web Audio API) -->
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let audioInitialized = false;
+
+        function initAudio() {
+            if (!audioInitialized) {
+                audioContext.resume();
+                audioInitialized = true;
+            }
+        }
+
+        function playClick() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        function playCorrect() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(784, audioContext.currentTime + 0.15);
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+
+        function playWrong() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 200;
+            oscillator.type = 'sawtooth';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        function playFailure() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.5);
+            oscillator.type = 'sawtooth';
+            
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function playCrowd() {
+            initAudio();
+            const bufferSize = audioContext.sampleRate * 0.8;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.15 * (1 - i / bufferSize);
+            }
+            
+            const source = audioContext.createBufferSource();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            source.buffer = buffer;
+            filter.type = 'bandpass';
+            filter.frequency.value = 800;
+            
+            source.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            
+            source.start(audioContext.currentTime);
+        }
+
+        // DADOS DO QUIZ
+        const questions = [
+            {
+                number: "PERGUNTA 1/5",
+                text: "Antes de um show de rock, o que você faz primeiro?",
+                options: [
+                    { text: "Escolhe roupa confortável demais", correct: false },
+                    { text: "Descansa pois é só mais um showzinho...", correct: false },
+                    { text: "Ouve a playlist no Spotify sem parar", correct: true },
+                    { text: "Chega em cima da hora", correct: false }
+                ]
+            },
+            {
+                number: "PERGUNTA 2/5",
+                text: "Durante o primeiro riff pesado, sua reação automática é:",
+                options: [
+                    { text: "Ficar parado observando", correct: false },
+                    { text: "Ficar mexendo no celular", correct: false },
+                    { text: "Ficar sentado", correct: false },
+                    { text: "Balançar a cabeça sem parar", correct: true }
+                ]
+            },
+            {
+                number: "PERGUNTA 3/5",
+                text: "O que define que o show está bom de verdade?",
+                options: [
+                    { text: "A energia da galera acompanhando a banda", correct: true },
+                    { text: "Ninguém se mexendo", correct: false },
+                    { text: "Todo mundo filmando", correct: false },
+                    { text: "Espaço demais para circular", correct: false }
+                ]
+            },
+            {
+                number: "PERGUNTA 4/5",
+                text: "Quando o vocalista pede pra galera cantar junto, você:",
+                options: [
+                    { text: "Finge que não sabe a letra e fica quieto", correct: false },
+                    { text: "Canta alto junto com ele", correct: true },
+                    { text: "Canta bem baixo", correct: false },
+                    { text: "Fica só observando", correct: false }
+                ]
+            },
+            {
+                number: "PERGUNTA 5/5",
+                text: "Esse show do Avenged Sevenfold + A Day To Remember será:",
+                options: [
+                    { text: "Um evento comum", correct: false },
+                    { text: "Mais um na agenda", correct: false },
+                    { text: "Um show inesquecível", correct: true },
+                    { text: "O último do ano", correct: false }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedOption = null;
+        let correctAnswers = 0;
+
+        function createFirework(x, y) {
+            const colors = ['#0066ff', '#3399ff', '#66ccff', '#ffffff', '#00aaff', '#0088ff'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-spark';
+                
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const velocity = 50 + Math.random() * 100;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.setProperty('--color', color);
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                
+                const container = document.getElementById('fireworksContainer');
+                container.appendChild(particle);
+                
+                particle.style.animation = 'explode 1.5s ease-out forwards';
+                
+                setTimeout(() => particle.remove(), 1500);
+            }
+        }
+
+        function launchFireworks() {
+            const intervals = [0, 300, 600, 1000, 1400, 1800, 2200, 2600];
+            
+            intervals.forEach((delay) => {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * (window.innerHeight * 0.6);
+                    createFirework(x, y);
+                }, delay);
+            });
+        }
+
+        function startFireworksLoop() {
+            launchFireworks();
+            setInterval(() => {
+                launchFireworks();
+            }, 3000);
+        }
+
+        function startQuiz() {
+            playClick();
+            document.getElementById('intro').classList.remove('active');
+            document.getElementById('quiz').classList.add('active');
+            correctAnswers = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showFinalScreen();
+                return;
+            }
+
+            const q = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = q.number;
+            document.getElementById('questionText').textContent = q.text;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = option.text;
+                div.onclick = () => selectOption(index);
+                optionsContainer.appendChild(div);
+            });
+
+            selectedOption = null;
+            document.getElementById('nextBtn').disabled = true;
+            
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function selectOption(index) {
+            playClick();
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[index].classList.add('selected');
+            
+            selectedOption = index;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            if (q.options[selectedOption].correct) {
+                playCorrect();
+                options[selectedOption].classList.add('correct');
+                correctAnswers++;
+            } else {
+                playWrong();
+                options[selectedOption].classList.add('incorrect');
+                q.options.forEach((opt, i) => {
+                    if (opt.correct) options[i].classList.add('correct');
+                });
+            }
+            
+            document.getElementById('nextBtn').disabled = true;
+            
+            setTimeout(() => {
+                currentQuestion++;
+                loadQuestion();
+            }, 1500);
+        }
+
+        function showFinalScreen() {
+            document.getElementById('progressFill').style.width = '100%';
+            
+            setTimeout(() => {
+                document.getElementById('quiz').classList.remove('active');
+                
+                // Se errou 3 ou mais (acertou menos de 3)
+                if (correctAnswers < 3) {
+                    playFailure();
+                    document.getElementById('failure').classList.add('active');
+                    document.getElementById('correctCount').textContent = correctAnswers;
+                } else {
+                    // Se passou no teste
+                    playCrowd();
+                    document.getElementById('final').classList.add('active');
+                    
+                    setTimeout(() => {
+                        document.getElementById('final').classList.remove('active');
+                        document.getElementById('reveal').classList.add('active');
+                        playCrowd();
+                        setTimeout(() => startFireworksLoop(), 500);
+                    }, 21000);
+                }
+            }, 800);
+        }
+
+        // Inicializar áudio no primeiro clique
+        document.addEventListener('click', initAudio, { once: true });
+    </script>
+</body>
+</html>
